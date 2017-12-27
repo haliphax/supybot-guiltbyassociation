@@ -9,7 +9,7 @@ import supybot.world as world
 __version__ = ""
 __author__ = supybot.Author('haliphax', 'haliphax', 'haliphax@nope')
 __contributors__ = {}
-__url__ = 'https://github.com/haliphax/supybot-guilt-by-association'
+__url__ = 'https://github.com/haliphax/supybot-guiltbyassociation'
 
 import config
 import plugin

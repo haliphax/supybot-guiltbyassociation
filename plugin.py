@@ -1,3 +1,5 @@
+from time import time
+
 import supybot.utils as utils
 from supybot.commands import *
 import supybot.plugins as plugins
@@ -66,6 +68,14 @@ class GuiltByAssociation(callbacks.Plugin):
         sourcechan = replyMsg.args[0]
         hostmask = '@'.join(d['311'].args[2:4])
         user = d['311'].args[-1]
+        delay = self.registryValue('expire')
+
+        if not self.registryValue('enable', sourcechan):
+            return
+
+        def unban():
+            irc.queueMsg(ircmsgs.unban(sourcechan, '*!{hostmask}'
+                                                   .format(hostmask=hostmask)))
 
         if '319' in d:
             channels = d['319'].args[-1].split()
@@ -84,11 +94,14 @@ class GuiltByAssociation(callbacks.Plugin):
 
                 if stripped_chan in self._chans:
                     # user is in a hostile channel; kick ban
+                    schedule.addEvent(unban, time() + delay)
                     irc_ = callbacks.SimpleProxy(irc, msg)
                     irc_.queueMsg(
                         ircmsgs.ban(sourcechan,
                                     '*!{hostmask}'.format(hostmask=hostmask)))
                     irc_.queueMsg(ircmsgs.kick(sourcechan, nick))
+
+                    break
 
         del self._whois[(irc, loweredNick)]
 

@@ -11,12 +11,11 @@ __author__ = supybot.Author('haliphax', 'haliphax', 'haliphax@nope')
 __contributors__ = {}
 __url__ = 'https://github.com/haliphax/supybot-guiltbyassociation'
 
-import config
-import plugin
-reload(plugin)
+from . import config
+from . import plugin
 
 if world.testing:
-    import test
+    from . import test
 
 Class = plugin.Class
 configure = config.configure
